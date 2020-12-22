@@ -35,19 +35,16 @@ public class Character {
 		}
 		
 		
-		public int findDuplicate(String [] wordArr, int dupCount, String str, int startIndex) {
-			for (int i = startIndex; i < wordArr.length; i++ ) {
-				boolean used;
-				
-				used = str.equals(wordArr[i]);
-				
-				if (used) {
-					dupCount++;
-				}
-					
+		//check for sentence ending punctuation
+		public boolean hasEndPunc(int i) {
+			if (s.charAt(i) == '.' || s.charAt(i) == '!' || s.charAt(i) == '?') {
+				return true;
+			}else {
+				return false;
 			}
-			return dupCount;
-			
 		}
+		
+		
+
 	
 }

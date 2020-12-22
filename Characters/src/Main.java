@@ -6,7 +6,7 @@ public class Main {
 		Scanner scn = new Scanner (System.in);
 		Character chara = new Character();
 		String myStr, str2, str;
-		boolean hasPunc=false, hasSpace=false, hasMultSpace=false;
+		boolean hasPunc=false, hasSpace=false, hasMultSpace=false, hasEndPunc=false;
 		int strLength;
 		int arrIndex=0;
 		String wordStringTemp = " ", wordString = " ";
@@ -14,6 +14,7 @@ public class Main {
 		int charCount=0;
 		int usedCount=0;
 		int count=0;
+		int sentCount=1;
 	
 		System.out.println("Please enter a sentence.\n"
 				+ "You can input anything, numbers, punctuation etc.");
@@ -24,10 +25,7 @@ public class Main {
 		str2 = myStr.trim();
 		str = str2.toLowerCase();
 		
-		
-		//test
-		System.out.println(myStr);
-		System.out.println(str);
+	
 		
 		
 		//set arrays and variables
@@ -41,8 +39,7 @@ public class Main {
 			int k;
 			
 			for (k = i; k < str.length(); k++) {
-				//TODO GET RID OF:
-				char c = str.charAt(k);
+
 				
 				hasPunc = chara.hasPunctuation(k);
 				hasSpace = chara.hasSpace(k);
@@ -69,23 +66,48 @@ public class Main {
 				}
 				
 				
-				//tests for punctuation and space after 
+				//tests for punctuation and space after
+				//EXTRA CREDIT count sentences 
 				try {
 					if (hasPunc == true) {
 						if (chara.hasSpace(k+1) == true) {
+							hasEndPunc = chara.hasEndPunc(k);
+							if(hasEndPunc) {
+								if (sentCount > 1) {
+									charCount++;
+								}
+								wordStringTemp = str.substring(i, k);
+								wordString = wordStringTemp.trim();
+								i = k;	
+								hasSpace = true;
+								sentCount++;
+								
+							}else {
+								wordStringTemp = str.substring(i, k);
+								wordString = wordStringTemp.trim();
+								i = k;	
+								hasSpace = true;
+								charCount++;
+							}
 							break;
 						}else {
+							
 							continue;
 						}
 					}
 				}catch(StringIndexOutOfBoundsException e) {
 					//special case end of sentence
+					if (sentCount > 1) {
+						charCount++;
+					}
 					hasSpace = false;
 					wordString = str.substring(i, k);
 					usedCount = 0; 
 					
 					//test for if it's a duplicate 
 					for (int j = 0; j < arrIndex; j++) {
+						
+						
 						beenUsed = wordString.equals(wordArr[j]);
 						if (beenUsed) {
 							countArr[j] ++;
@@ -100,9 +122,9 @@ public class Main {
 						countArr[arrIndex] = 1;
 					}
 					i=k;
-					
-				}//end of catch
+				}//end of catch	
 				
+			
 				
 				//add to character count unless it's a space
 				if (hasSpace == false) {
@@ -118,6 +140,11 @@ public class Main {
 				wordStringTemp = str.substring(i, k);
 				wordString = wordStringTemp.trim();
 				i = k;	
+				if (wordString.equals("")) {
+//					wordArr[arrIndex] = null;
+					i = k;
+					continue;
+				}
 			}
 			
 			
@@ -149,9 +176,12 @@ public class Main {
 				
 				//check if it's been used, add to array
 				if (usedCount == 0) {
-					wordArr[arrIndex] = wordString;
-					countArr[arrIndex] = 1;
-					arrIndex++;
+					
+						wordArr[arrIndex] = wordString;
+						countArr[arrIndex] = 1;
+						arrIndex++;
+					
+					
 				}
 				
 			//empty wordString	
@@ -161,23 +191,26 @@ public class Main {
 		}//end of big for loop
 		
 		
-		//testers
-		System.out.println("Word Arr: ");
+
+	
 		for (int i = 0; i<=arrIndex; i++) {
 			if (wordArr [i]  != null) {
-				System.out.println(wordArr[i].trim());
-			}
-		}
-		System.out.println("Count Arr: ");
-		for (int i = 0; i<=arrIndex; i++) {
-			if (wordArr[i] != null) {
+				System.out.println("");
+				System.out.printf("%-10s%d", wordArr[i].trim(), countArr[i]);
+			
 				count = count + countArr[i];
-				System.out.println(countArr[i]);
 			}
-		}
+			
+		}//end of for
+		System.out.println("");
+		System.out.println("");
 		
+
 		System.out.println("Characters: " + charCount);
 		System.out.println("Words: " + count);
+		System.out.println("Sentences: " + sentCount);
+		
+		scn.close();
 		
 	}
 
